@@ -4,81 +4,51 @@
 @section('content')
     <h1>@yield('title')</h1>
 
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
 
-    <form class="vstack gap-2" action="{{ route($property->exists ? 'admin.property.update' : 'admin.property.store', $property) }}" method="post">
+
+    <form action="{{ route($property->exists ? 'admin.property.update' : 'admin.property.new', $property) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method($property->exists ? 'put' : 'post')
 
-        <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" value="{{ old('title') ??  $property->title }}">
-        </div>
 
-        <div class="mb-3">
-            <label for="city" class="form-label">City</label>
-            <input type="text" class="form-control" id="city" name="city" value="{{ old('city') ??  $property->city }}">
-        </div>
 
-        <div class="mb-3">
-            <label for="address" class="form-label">Address</label>
-            <input type="text" class="form-control" id="address" name="address" value="{{ old('address') ??  $property->address }}">
-        </div>
+<div class="row">
+@include('shared.input', [ 'class' =>'col',  'label' => 'Titre', 'name' => 'title', 'value' => $property->title])
+<div class="col row">
+@include('shared.input', [ 'class' =>'col',  'name' => 'surface', 'value' => $property->surface])
+@include('shared.input', [ 'class' =>'col',  'label' => 'Prix', 'name' => 'price', 'value' => $property->price])
 
-        <div class="row mb-3">
-            <div class="col">
-                <label for="surface" class="form-label">Surface</label>
-                <input type="text" class="form-control" id="surface" name="surface" value="{{ old('surface') ??  $property->surface }}">
-            </div>
+</div>
+</div>
 
-            <div class="col">
-                <label for="price" class="form-label">Prix</label>
-                <input type="text" class="form-control" id="price" name="price" value="{{ old('price') ??  $property->price }}">
-            </div>
-        </div>
+@include('shared.input', [  'type' => 'textarea' , 'name' => 'description', 'value' => $property->description])
 
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description" rows="4">{{ $property->description }}</textarea>
-        </div>
+<div class="row">
+@include('shared.input', [ 'class' =>'col',  'label' => 'Pièces', 'name' => 'rooms', 'value' => $property->rooms])
+@include('shared.input', [ 'class' =>'col',  'label' => 'Chambres', 'name' => 'bedrooms', 'value' => $property->bedrooms])
+@include('shared.input', [ 'class' =>'col',  'label' => 'Etage', 'name' => 'floor', 'value' => $property->floor])
+</div>
 
-        <div class="row mb-3">
-            <div class="col">
-                <label for="rooms" class="form-label">Pièces</label>
-                <input type="text" class="form-control" id="rooms" name="rooms" value="{{ old('rooms') ??  $property->rooms }}">
-            </div>
+<div class="row">
+@include('shared.input', [ 'class' =>'col',  'label' => 'Adresse', 'name' => 'address', 'value' => $property->address])
+@include('shared.input', [ 'class' =>'col',  'label' => 'Ville', 'name' => 'city', 'value' => $property->city])
+@include('shared.input', [ 'class' =>'col',  'label' => 'Code postal', 'name' => 'postal_code', 'value' => $property->postal_code])
+</div>
+@include('shared.select', [ 'label' => 'Options', 'name' => 'options', 'value' => $property->options()->pluck('id'), 'multiple' => true])
 
-            <div class="col">
-                <label for="bedrooms" class="form-label">Chambres</label>
-                <input type="text" class="form-control" id="bedrooms" name="bedrooms" value="{{ old('bedrooms') ?? $property->bedrooms }}">
-            </div>
+@include('shared.checkbox', [   'label' => 'Vendu', 'name' => 'sold', 'value' => $property->sold , 'option' => $options])
+{{ csrf_field() }}
+	<input type="file" name="picture" >
+	{{ $errors->first('picture', ':message') }}
 
-            <div class="col">
-                <label for="floor" class="form-label">Etage</label>
-                <input type="text" class="form-control" id="floor" name="floor" value="{{  old('floor') ?? $property->floor }}">
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label for="postal_code" class="form-label">Code Postal</label>
-            <input type="text" class="form-control" id="postal_code" name="postal_code" value="{{  old('postal_code') ?? $property->postal_code }}">
-        </div>
-
-        <div class="mb-3">
-            <label for="sold" class="form-label">Vendu</label>
-            <input type="checkbox" id="sold" value="1" name="sold">
-        </div>
-
-        <div class="form-group m-3">
-            <button type="submit" class="btn btn-primary float-end">Créer</button>
-        </div>
+            <div>
+            <button class="btn btn-primary">
+    @if($property->exists)
+        Modifier
+        @else
+        créer
+    @endif
+</button>
+</div>
     </form>
 @endsection

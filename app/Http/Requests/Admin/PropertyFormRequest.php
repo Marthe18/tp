@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PropertyFormRequest extends FormRequest
 {
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -21,7 +22,8 @@ class PropertyFormRequest extends FormRequest
      */
     public function rules(): array
     {
-    
+
+
         return [
             'title' => ['required',' min:8'],
             'description' => ['required',' min:8'],
@@ -32,8 +34,10 @@ class PropertyFormRequest extends FormRequest
             'price' => ['required', 'integer', ' min:0'],
             'city' => ['required', ' min:8'],
             'address' => ['required', ' min:8'],
-            'postal_code' => ['required', ' min:8'],
-            'sold' => ['required', ' boolean'], 
+            'postal_code' => ['required', ' min:3'],
+            'sold' => ['required', ' boolean'],
+            'options' => ['array', 'exists:options,id', 'required'],
+            'picture' => 'nullable|image|mimes:png,jpg,jpeg|max:2048'
         ];
     }
 }
